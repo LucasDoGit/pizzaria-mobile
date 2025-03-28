@@ -1,17 +1,80 @@
-import React, { useContext } from "react";
-import { View, Text, Button } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, TextInput } from "react-native";
 
-import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigation } from "@react-navigation/native";
+
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { StackParamsList } from "../../routes/app.routes";
 
 export default function(){
-    const { signOut } = useContext(AuthContext)
+    const [number, setNumber] = useState('')
+    const navigation = useNavigation<NativeStackNavigationProp<StackParamsList>>()
+
+    async function openOrder(){
+        
+        if(number === ''){
+            return
+        }
+
+        navigation.navigate('Order', { number: number, order_id: 'asdasdasdasdasd'})
+    }
+    
     return(
-        <View>
-            <Text>Tela de Dashboard</Text>
-            <Button 
-                title='Sair do App'
-                onPress={signOut}
+        <SafeAreaView style={styles.container}>
+            <Text style={styles.title}>Novo Pedido</Text>
+
+            <TextInput
+                placeholder="Numero da mesa"
+                placeholderTextColor="#F0F0F0"
+                style={styles.input}
+                keyboardType="numeric"
+                value={number}
+                onChangeText={setNumber}
             />
-        </View>
+
+            <TouchableOpacity style={styles.button} onPress={openOrder}>
+                <Text style={styles.buttonText}>Abrir Mesa</Text>
+            </TouchableOpacity>
+        </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 15,
+        backgroundColor: '#1d1d2e'
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: '#FFF',
+        marginBottom: 24,
+    },
+    input: {
+        width: '90%',
+        height: 60,
+        backgroundColor: '#101026',
+        borderRadius: 4,
+        paddingHorizontal: 8,
+        textAlign: 'center',
+        fontSize: 22,
+        color: '#FFF'
+    },
+    button: {
+        width: '90%',
+        height: 40,
+        borderRadius: 4,
+        backgroundColor: '#3fffa3',
+        marginVertical: 12,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonText: {
+        fontSize: 18,
+        color: '#101026',
+        fontWeight: 'bold'
+    }
+})
