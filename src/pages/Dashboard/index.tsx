@@ -6,6 +6,8 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamsList } from "../../routes/app.routes";
 
+import { api } from "../../services/api";
+
 export default function(){
     const [number, setNumber] = useState('')
     const navigation = useNavigation<NativeStackNavigationProp<StackParamsList>>()
@@ -16,7 +18,13 @@ export default function(){
             return
         }
 
-        navigation.navigate('Order', { number: number, order_id: 'asdasdasdasdasd'})
+        const response = await api.post('/order', {
+            table: Number(number)
+        })
+
+        navigation.navigate('Order', { number: number, order_id: response.data.id })
+
+        setNumber('');
     }
     
     return(
